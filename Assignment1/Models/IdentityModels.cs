@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -9,6 +11,18 @@ namespace Assignment1.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            Sales = new HashSet<Sale>();
+            Products = new HashSet<Product>();
+        }
+
+        
+        [InverseProperty("Users")]
+        public virtual ICollection<Sale> Sales { get; set; }
+        [InverseProperty("Users")]
+        public virtual ICollection<Product> Products { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -29,5 +43,11 @@ namespace Assignment1.Models
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<Sale> Sales { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<StoreLocation> StoreLocations { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }
